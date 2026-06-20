@@ -12,10 +12,44 @@ import type { ReelSpec, Scene, Transition } from "./schema";
  */
 
 const STOPWORDS = new Set([
-  "make", "a", "an", "the", "video", "reel", "clip", "movie", "about", "of",
-  "with", "show", "me", "please", "create", "build", "in", "on", "to", "and",
-  "for", "my", "some", "today", "this", "week", "from", "30s", "second",
-  "seconds", "minute", "mach", "ein", "über", "von", "mit", " aus", "zeig",
+  "make",
+  "a",
+  "an",
+  "the",
+  "video",
+  "reel",
+  "clip",
+  "movie",
+  "about",
+  "of",
+  "with",
+  "show",
+  "me",
+  "please",
+  "create",
+  "build",
+  "in",
+  "on",
+  "to",
+  "and",
+  "for",
+  "my",
+  "some",
+  "today",
+  "this",
+  "week",
+  "from",
+  "30s",
+  "second",
+  "seconds",
+  "minute",
+  "mach",
+  "ein",
+  "über",
+  "von",
+  "mit",
+  " aus",
+  "zeig",
 ]);
 
 function keywords(query: string): string[] {
@@ -51,7 +85,7 @@ function reelTitle(query: string, words: string[]): string {
 export function composeReel(
   query: string,
   catalog: PlannerAsset[],
-  selectedAssetIds: string[] | null
+  selectedAssetIds: string[] | null,
 ): ReelSpec {
   const words = keywords(query);
 
@@ -63,13 +97,11 @@ export function composeReel(
       .map((id) => byId.get(id))
       .filter((a): a is PlannerAsset => Boolean(a));
   } else {
-    const usable = catalog.filter(
-      (a) => !a.tags.some((t) => t === "test" || t === "placeholder")
-    );
+    const usable = catalog.filter((a) => !a.tags.some((t) => t === "test" || t === "placeholder"));
     chosen = usable
       .map((a, i) => ({ a, i, s: scoreAsset(a, words) }))
       .filter((x) => x.s > 0)
-      .sort((x, y) => (y.s - x.s) || (x.i - y.i)) // score desc, stable by index
+      .sort((x, y) => y.s - x.s || x.i - y.i) // score desc, stable by index
       .slice(0, 8)
       .map((x) => x.a);
     // Nothing matched the keywords — fall back to the newest few in catalog order.
@@ -77,9 +109,7 @@ export function composeReel(
   }
 
   const title = reelTitle(query, words);
-  const scenes: Scene[] = [
-    { kind: "title", title, eyebrow: "MIND VIDEO", duration: 3.5 },
-  ];
+  const scenes: Scene[] = [{ kind: "title", title, eyebrow: "MIND VIDEO", duration: 3.5 }];
 
   chosen.forEach((asset, idx) => {
     const eyebrow = (asset.tags[0] ?? "scene").toUpperCase();

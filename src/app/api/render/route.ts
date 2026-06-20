@@ -1,4 +1,4 @@
-import { NextRequest } from "next/server";
+import type { NextRequest } from "next/server";
 
 /**
  * Same-origin proxy to the stateless MP4 render worker (worker/server.mjs).
@@ -40,7 +40,7 @@ export async function POST(req: NextRequest) {
       `render worker unreachable at ${WORKER_URL} — is it running? (npm run worker) (${
         e instanceof Error ? e.message : String(e)
       })`,
-      { status: 502 }
+      { status: 502 },
     );
   }
 

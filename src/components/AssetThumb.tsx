@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { ImageIcon } from "lucide-react";
+import { useEffect, useState } from "react";
 import { fetchAssetBlob } from "@/lib/solid/asset-store";
 
 /**
@@ -41,7 +41,9 @@ export default function AssetThumb({
 
   if (failed) {
     return (
-      <div className={`flex items-center justify-center bg-muted text-muted-foreground ${className ?? ""}`}>
+      <div
+        className={`flex items-center justify-center bg-muted text-muted-foreground ${className ?? ""}`}
+      >
         <ImageIcon className="size-6" />
       </div>
     );

@@ -1,5 +1,5 @@
-import Link from "next/link";
 import { Button } from "@mind-studio/ui";
+import Link from "next/link";
 
 export default function Landing() {
   return (
@@ -11,11 +11,10 @@ export default function Landing() {
         Drop your media. Describe a reel.
       </h1>
       <p className="mt-6 max-w-2xl text-lg leading-relaxed text-muted-foreground">
-        Mind Video captions every photo and clip you drop, then turns a sentence
-        like <em>“a calm reel about apple trees”</em> into an ordered{" "}
-        <em>ReelSpec</em> — a fixed set of scene blocks the agent fills, never
-        free-form markup. It previews live in your browser and renders to an MP4
-        with{" "}
+        Mind Video captions every photo and clip you drop, then turns a sentence like{" "}
+        <em>“a calm reel about apple trees”</em> into an ordered <em>ReelSpec</em> — a fixed set of
+        scene blocks the agent fills, never free-form markup. It previews live in your browser and
+        renders to an MP4 with{" "}
         <a
           className="text-primary underline-offset-4 hover:underline"
           href="https://github.com/heygen-com/hyperframes"
@@ -49,10 +48,9 @@ export default function Landing() {
       </section>
 
       <p className="mt-16 rounded-lg border bg-muted/40 px-5 py-4 font-mono text-xs leading-relaxed text-muted-foreground">
-        Privacy invariant: your browser talks directly to your pod. The query
-        you type and a caption thumbnail are sent to the model (this is the
-        authoring tool), but your assets and saved reels never touch a Mind
-        server.
+        Privacy invariant: your browser talks directly to your pod. The query you type and a caption
+        thumbnail are sent to the model (this is the authoring tool), but your assets and saved
+        reels never touch a Mind server.
       </p>
     </section>
   );

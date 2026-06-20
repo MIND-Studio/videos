@@ -9,8 +9,7 @@
  *       reel.mp4   — the rendered video
  *       meta.json  — { id, title, sceneCount, duration, updatedAt }
  */
-export const POD_BASE_URL =
-  process.env.NEXT_PUBLIC_POD_BASE_URL ?? "http://localhost:3011/";
+export const POD_BASE_URL = process.env.NEXT_PUBLIC_POD_BASE_URL ?? "http://localhost:3011/";
 
 export const ASSETS_PATH = "mind-video/assets/";
 export const VIDEOS_PATH = "mind-video/videos/";

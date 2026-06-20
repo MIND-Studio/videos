@@ -1,10 +1,10 @@
 "use client";
 
-import { useRef, useState } from "react";
 import { Button } from "@mind-studio/ui";
-import { UploadCloud, Loader2, Check, AlertCircle } from "lucide-react";
-import { uploadAsset, setCaption } from "@/lib/solid/asset-store";
+import { AlertCircle, Check, Loader2, UploadCloud } from "lucide-react";
+import { useRef, useState } from "react";
 import { fileToBase64, isModelImage, posterFromVideo } from "@/lib/media";
+import { setCaption, uploadAsset } from "@/lib/solid/asset-store";
 
 type RowStatus = "uploading" | "captioning" | "ready" | "deduped" | "error";
 
@@ -133,7 +133,10 @@ export default function DropPanel({
                 {r.tags && r.tags.length > 0 && (
                   <div className="mt-1.5 flex flex-wrap gap-1.5">
                     {r.tags.map((t) => (
-                      <span key={t} className="rounded-full bg-muted px-2 py-0.5 font-mono text-[10px] text-muted-foreground">
+                      <span
+                        key={t}
+                        className="rounded-full bg-muted px-2 py-0.5 font-mono text-[10px] text-muted-foreground"
+                      >
                         {t}
                       </span>
                     ))}

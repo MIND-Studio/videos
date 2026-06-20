@@ -1,16 +1,16 @@
 "use client";
 
 import {
-  overwriteFile,
-  getSolidDataset,
-  getContainedResourceUrlAll,
   deleteContainer,
   deleteFile,
+  getContainedResourceUrlAll,
+  getSolidDataset,
+  overwriteFile,
 } from "@inrupt/solid-client";
-import { fetcher } from "./fetcher";
-import { videosContainerFor, reelId } from "@/lib/config";
-import { reelSchema, type ReelSpec } from "@/lib/spec/schema";
+import { reelId, videosContainerFor } from "@/lib/config";
 import { reelDuration } from "@/lib/reel/serialize";
+import { type ReelSpec, reelSchema } from "@/lib/spec/schema";
+import { fetcher } from "./fetcher";
 
 /**
  * Pod storage for rendered reels. The BROWSER uploads the MP4 it got back from
@@ -38,7 +38,7 @@ export async function saveReel(
   reel: ReelSpec,
   mp4: Blob,
   isoNow: string,
-  existingId?: string
+  existingId?: string,
 ): Promise<ReelMeta> {
   const container = videosContainerFor(podRoot);
   const id = existingId ?? reelId(reel.title, isoNow.replace(/[^0-9]/g, "").slice(8, 14));
@@ -77,7 +77,7 @@ export async function listReels(podRoot: string): Promise<ReelMeta[]> {
       } catch {
         return null;
       }
-    })
+    }),
   );
   return metas
     .filter((m): m is ReelMeta => m !== null)

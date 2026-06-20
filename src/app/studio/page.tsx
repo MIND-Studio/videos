@@ -1,12 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import Link from "next/link";
 import { Button } from "@mind-studio/ui";
 import { Loader2 } from "lucide-react";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import VideoApp from "@/components/VideoApp";
 import { ensureSession, rememberSignedOutPath } from "@/lib/solid/auth";
 import { currentIdentity, signalReady } from "@/lib/solid/broker";
-import VideoApp from "@/components/VideoApp";
 
 export default function StudioPage() {
   const [state, setState] = useState<"loading" | "signedout" | "ready">("loading");

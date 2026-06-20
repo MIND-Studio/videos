@@ -1,8 +1,6 @@
-import { reelSchema, type ReelSpec, type Scene, DEFAULT_DURATION } from "./schema";
+import { DEFAULT_DURATION, type ReelSpec, reelSchema, type Scene } from "./schema";
 
-export type ValidateResult =
-  | { ok: true; reel: ReelSpec }
-  | { ok: false; error: string };
+export type ValidateResult = { ok: true; reel: ReelSpec } | { ok: false; error: string };
 
 /**
  * Parse unknown JSON into a ReelSpec with a human-readable error suitable for

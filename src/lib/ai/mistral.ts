@@ -1,7 +1,7 @@
 import type { z } from "zod";
-import { reelSchema } from "@/lib/spec/schema";
-import { SYSTEM_PROMPT, planContent } from "@/lib/spec/prompt";
 import type { PlannerAsset } from "@/lib/catalog";
+import { planContent, SYSTEM_PROMPT } from "@/lib/spec/prompt";
+import { reelSchema } from "@/lib/spec/schema";
 
 /**
  * Mistral provider for the plan + caption routes. Mirrors the Anthropic path:
@@ -54,7 +54,7 @@ function objectFrom(message: { content?: unknown } | undefined): unknown {
 export async function planWithMistral(
   query: string,
   catalog: PlannerAsset[],
-  selectedAssetIds: string[] | null
+  selectedAssetIds: string[] | null,
 ): Promise<unknown> {
   const client = await mistralClient();
   const res = await client.chat.parse({
@@ -73,7 +73,7 @@ export async function captionWithMistral(
   base64: string,
   mimeType: string,
   kind: "photo" | "video",
-  captionSchema: z.ZodType<{ caption: string; tags: string[] }>
+  captionSchema: z.ZodType<{ caption: string; tags: string[] }>,
 ): Promise<{ caption: string; tags: string[] }> {
   const client = await mistralClient();
   const prompt =
@@ -98,5 +98,8 @@ export async function captionWithMistral(
 
   const parsed = captionSchema.safeParse(objectFrom(res.choices?.[0]?.message));
   if (!parsed.success) throw new Error("Mistral returned no caption");
-  return { caption: parsed.data.caption, tags: parsed.data.tags.slice(0, 12).map((t) => t.toLowerCase()) };
+  return {
+    caption: parsed.data.caption,
+    tags: parsed.data.tags.slice(0, 12).map((t) => t.toLowerCase()),
+  };
 }

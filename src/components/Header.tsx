@@ -1,14 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { clearLastIdentity } from "@mind-studio/core";
 import { Button } from "@mind-studio/ui";
 import { LogOut } from "lucide-react";
-import { clearLastIdentity } from "@mind-studio/core";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import ThemeToggle from "@/components/ThemeToggle";
 import { ensureSession } from "@/lib/solid/auth";
 import { session } from "@/lib/solid/session";
-import ThemeToggle from "@/components/ThemeToggle";
 
 const APP_NAME = "Video";
 
@@ -63,7 +63,13 @@ export default function Header() {
           )}
           <ThemeToggle />
           {webId && (
-            <Button variant="ghost" size="sm" onClick={onSignOut} data-testid="sign-out" aria-label="Sign out">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onSignOut}
+              data-testid="sign-out"
+              aria-label="Sign out"
+            >
               <LogOut className="size-4" />
               <span className="hidden sm:inline">Sign out</span>
             </Button>

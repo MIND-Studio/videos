@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect, useRef, useState, useCallback } from "react";
 import { Button } from "@mind-studio/ui";
-import { Play, Pause, Loader2 } from "lucide-react";
-import type { ReelSpec } from "@/lib/spec/schema";
-import { serializeReel, reelDuration } from "@/lib/reel/serialize";
+import { Loader2, Pause, Play } from "lucide-react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { reelDuration, serializeReel } from "@/lib/reel/serialize";
 import { fetchAssetBlob } from "@/lib/solid/asset-store";
+import type { ReelSpec } from "@/lib/spec/schema";
 
 /**
  * In-browser reel preview. It serializes the ReelSpec with the SAME
@@ -14,13 +14,7 @@ import { fetchAssetBlob } from "@/lib/solid/asset-store";
  * with a requestAnimationFrame seeker — no server render state, multi-user safe.
  * Asset bytes are fetched from the pod as `blob:` URLs.
  */
-export default function ReelCanvas({
-  reel,
-  podRoot,
-}: {
-  reel: ReelSpec;
-  podRoot: string;
-}) {
+export default function ReelCanvas({ reel, podRoot }: { reel: ReelSpec; podRoot: string }) {
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const rafRef = useRef<number | null>(null);
   const lastTsRef = useRef<number>(0);
@@ -34,7 +28,10 @@ export default function ReelCanvas({
   const total = reelDuration(reel);
 
   // Reach the GSAP timeline the composition registered on window.
-  const timeline = useCallback((): { time: (t?: number) => number; duration: () => number } | null => {
+  const timeline = useCallback((): {
+    time: (t?: number) => number;
+    duration: () => number;
+  } | null => {
     const win = iframeRef.current?.contentWindow as unknown as {
       __timelines?: { main?: { time: (t?: number) => number; duration: () => number } };
     } | null;
@@ -57,8 +54,8 @@ export default function ReelCanvas({
 
     const ids = Array.from(
       new Set(
-        reel.scenes.flatMap((s) => (s.kind === "photo" || s.kind === "video" ? [s.assetId] : []))
-      )
+        reel.scenes.flatMap((s) => (s.kind === "photo" || s.kind === "video" ? [s.assetId] : [])),
+      ),
     );
 
     (async () => {
@@ -73,7 +70,7 @@ export default function ReelCanvas({
           } catch {
             /* missing asset → resolver falls back to the id (broken img, but renders) */
           }
-        })
+        }),
       );
       if (cancelled) return;
       const html = serializeReel(reel, (id) => urlById.get(id) ?? id);
@@ -128,7 +125,7 @@ export default function ReelCanvas({
       setHead(next);
       rafRef.current = requestAnimationFrame(tick);
     },
-    [timeline, total]
+    [timeline, total],
   );
 
   // Drive the rAF seeker from the `playing` flag, so both the play/pause button
@@ -172,7 +169,12 @@ export default function ReelCanvas({
       </div>
 
       <div className="flex items-center gap-3">
-        <Button size="icon-sm" variant="secondary" onClick={togglePlay} aria-label={playing ? "Pause" : "Play"}>
+        <Button
+          size="icon-sm"
+          variant="secondary"
+          onClick={togglePlay}
+          aria-label={playing ? "Pause" : "Play"}
+        >
           {playing ? <Pause className="size-4" /> : <Play className="size-4" />}
         </Button>
         <input
