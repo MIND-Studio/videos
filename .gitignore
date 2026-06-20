@@ -1,0 +1,19 @@
+node_modules/
+.next/
+out/
+.css-data/
+.indexer-data/
+.cache/
+.screenshots/
+.playwright-mcp/
+.test-fixtures/
+*.log
+*.png
+.env
+.env*.local
+.DS_Store
+tsconfig.tsbuildinfo
+next-env.d.ts
+
+# render worker temp projects
+.work/
