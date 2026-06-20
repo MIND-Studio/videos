@@ -1,4 +1,4 @@
-# Mind Video
+# Mind Videos
 
 Drop photos and videos, let Claude caption them, then describe the reel you want.
 The agent plans a schema-validated `ReelSpec`, it previews live in your browser,

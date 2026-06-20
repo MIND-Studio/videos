@@ -1,10 +1,10 @@
-# AGENTS.md — mind-video
+# AGENTS.md — mind-videos
 
 Orientation for agents working in this prototype. **Read this before editing.**
 
 ## What it is
 
-Mind Video — drop photos/videos, Claude vision captions them, then a natural-
+Mind Videos — drop photos/videos, Claude vision captions them, then a natural-
 language query becomes a short reel. Sibling of drive/notes/chat/slides — own
 port, own data, own docs. **Do not unify with sibling prototypes.** Dev port
 **3170**; render worker **3172**; shared pod (mind-node) **3011**.
