@@ -1,9 +1,9 @@
 import {
+  CROSSFADE,
+  DEFAULT_DURATION,
   type ReelSpec,
   type Scene,
   type SceneKind,
-  DEFAULT_DURATION,
-  CROSSFADE,
 } from "@/lib/spec/schema";
 
 /**
@@ -136,28 +136,40 @@ function timelineScript(timings: SceneTiming[], total: number): string {
     if (scene.kind === "photo" || scene.kind === "video") {
       // Ken Burns: slow scale on the foreground media across the scene.
       lines.push(
-        `tl.fromTo("#${id}-fg", { scale: 1.0 }, { scale: 1.08, duration: ${duration}, ease: "none" }, ${start});`
+        `tl.fromTo("#${id}-fg", { scale: 1.0 }, { scale: 1.08, duration: ${duration}, ease: "none" }, ${start});`,
       );
       if (scene.kind === "video") {
         // Drive the clip's playhead from the timeline so it's frame-seekable.
         lines.push(
-          `(function(){var v=document.getElementById("${id}-fg"); if(v){ tl.to({t:0},{t:${duration},duration:${duration},ease:"none",onUpdate:function(){try{v.currentTime=this.targets()[0].t;}catch(e){}}}, ${start}); }})();`
+          `(function(){var v=document.getElementById("${id}-fg"); if(v){ tl.to({t:0},{t:${duration},duration:${duration},ease:"none",onUpdate:function(){try{v.currentTime=this.targets()[0].t;}catch(e){}}}, ${start}); }})();`,
         );
       }
       // Label entrance.
-      lines.push(`if(document.getElementById("${id}-eb")) tl.from("#${id}-eb", { x: -28, opacity: 0, duration: 0.5 }, ${start + 0.6});`);
-      lines.push(`if(document.getElementById("${id}-ti")) tl.from("#${id}-ti", { y: 36, opacity: 0, duration: 0.6 }, ${start + 0.75});`);
-      lines.push(`if(document.getElementById("${id}-me")) tl.from("#${id}-me", { y: 18, opacity: 0, duration: 0.5 }, ${start + 1.0});`);
+      lines.push(
+        `if(document.getElementById("${id}-eb")) tl.from("#${id}-eb", { x: -28, opacity: 0, duration: 0.5 }, ${start + 0.6});`,
+      );
+      lines.push(
+        `if(document.getElementById("${id}-ti")) tl.from("#${id}-ti", { y: 36, opacity: 0, duration: 0.6 }, ${start + 0.75});`,
+      );
+      lines.push(
+        `if(document.getElementById("${id}-me")) tl.from("#${id}-me", { y: 18, opacity: 0, duration: 0.5 }, ${start + 1.0});`,
+      );
     } else {
       // Card text entrance.
-      lines.push(`if(document.getElementById("${id}-eb")) tl.from("#${id}-eb", { y: 16, opacity: 0, duration: 0.5 }, ${start + 0.3});`);
+      lines.push(
+        `if(document.getElementById("${id}-eb")) tl.from("#${id}-eb", { y: 16, opacity: 0, duration: 0.5 }, ${start + 0.3});`,
+      );
       lines.push(`tl.from("#${id}-ti", { y: 24, opacity: 0, duration: 0.7 }, ${start + 0.45});`);
-      lines.push(`if(document.getElementById("${id}-su")) tl.from("#${id}-su", { y: 16, opacity: 0, duration: 0.5 }, ${start + 0.7});`);
+      lines.push(
+        `if(document.getElementById("${id}-su")) tl.from("#${id}-su", { y: 16, opacity: 0, duration: 0.5 }, ${start + 0.7});`,
+      );
     }
 
     // flash-through-white: a quick white wash at the scene boundary.
     if ("transition" in scene && scene.transition === "flash-through-white") {
-      lines.push(`tl.fromTo("#${id}-flash", { opacity: 0.9 }, { opacity: 0, duration: 0.45, ease: "power2.out" }, ${Math.max(0, start - 0.15)});`);
+      lines.push(
+        `tl.fromTo("#${id}-flash", { opacity: 0.9 }, { opacity: 0, duration: 0.45, ease: "power2.out" }, ${Math.max(0, start - 0.15)});`,
+      );
     }
   }
   // Pin the total so the engine knows the exact length even if the last tween is shorter.

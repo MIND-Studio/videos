@@ -1,14 +1,14 @@
 "use client";
 
 import {
-  overwriteFile,
-  getSolidDataset,
-  getContainedResourceUrlAll,
   deleteFile,
+  getContainedResourceUrlAll,
+  getSolidDataset,
+  overwriteFile,
 } from "@inrupt/solid-client";
-import { fetcher } from "./fetcher";
-import { assetsContainerFor } from "@/lib/config";
 import type { CatalogEntry } from "@/lib/catalog";
+import { assetsContainerFor } from "@/lib/config";
+import { fetcher } from "./fetcher";
 
 /**
  * Pod storage for assets. The BROWSER talks directly to the pod — no Mind server
@@ -36,10 +36,14 @@ function isoDate(ms: number): string {
 }
 
 async function putJson(url: string, value: unknown): Promise<void> {
-  await overwriteFile(url, new Blob([JSON.stringify(value, null, 2)], { type: "application/json" }), {
-    contentType: "application/json",
-    fetch: fetcher(),
-  });
+  await overwriteFile(
+    url,
+    new Blob([JSON.stringify(value, null, 2)], { type: "application/json" }),
+    {
+      contentType: "application/json",
+      fetch: fetcher(),
+    },
+  );
 }
 
 /** The URL of an asset's stored bytes. */
@@ -55,7 +59,7 @@ export function assetBytesUrl(podRoot: string, id: string): string {
 export async function uploadAsset(
   podRoot: string,
   file: File,
-  isoNow: string
+  isoNow: string,
 ): Promise<{ entry: CatalogEntry; deduped: boolean }> {
   const buf = await file.arrayBuffer();
   const id = await hashBytes(buf);
@@ -100,7 +104,7 @@ export async function uploadAsset(
 export async function setCaption(
   podRoot: string,
   id: string,
-  patch: { caption?: string; tags?: string[]; duration?: number }
+  patch: { caption?: string; tags?: string[]; duration?: number },
 ): Promise<CatalogEntry> {
   const url = `${assetsContainerFor(podRoot)}${id}.json`;
   const res = await fetcher()(url);
@@ -146,7 +150,7 @@ export async function listCatalog(podRoot: string): Promise<CatalogEntry[]> {
         await new Promise((r) => setTimeout(r, 150 * (attempt + 1)));
       }
       return null;
-    })
+    }),
   );
   return entries
     .filter((e): e is CatalogEntry => e !== null)

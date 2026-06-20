@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { Button, useMindTheme } from "@mind-studio/ui";
 import { Moon, Sun } from "lucide-react";
+import { useEffect, useState } from "react";
 
 /**
  * Light/dark switch for the app chrome. Gated on a mounted flag so the icon

@@ -39,7 +39,10 @@ const photoScene = z
     eyebrow: z.string().optional().describe("Tiny uppercase theme word, e.g. 'LIGHT' or 'MORNING'"),
     headline: z.string().optional().describe("A short noticing — what to see in this frame"),
     meta: z.string().optional().describe("One small supporting line under the headline"),
-    transition: z.enum(TRANSITIONS).optional().describe("Transition INTO this scene (default crossfade)"),
+    transition: z
+      .enum(TRANSITIONS)
+      .optional()
+      .describe("Transition INTO this scene (default crossfade)"),
     duration: z.number().optional().describe("Seconds on screen (default ~4.5)"),
   })
   .strict();
@@ -51,7 +54,10 @@ const videoScene = z
     eyebrow: z.string().optional(),
     headline: z.string().optional(),
     meta: z.string().optional(),
-    transition: z.enum(TRANSITIONS).optional().describe("Transition INTO this scene (default crossfade)"),
+    transition: z
+      .enum(TRANSITIONS)
+      .optional()
+      .describe("Transition INTO this scene (default crossfade)"),
     duration: z.number().optional().describe("Seconds of the clip to play (default ~5)"),
   })
   .strict();
@@ -75,7 +81,9 @@ export const sceneSchema = z.discriminatedUnion("kind", [
 export const reelSchema = z
   .object({
     title: z.string().describe("Reel title — used for the pod folder name and the title card"),
-    scenes: z.array(sceneSchema).describe("The ordered scenes: title card → photo/video scenes → closing card"),
+    scenes: z
+      .array(sceneSchema)
+      .describe("The ordered scenes: title card → photo/video scenes → closing card"),
   })
   .strict();
 

@@ -1,11 +1,11 @@
 "use client";
 
-import { useMemo, useState } from "react";
 import { Button } from "@mind-studio/ui";
-import { Check, Trash2, Film, SearchX } from "lucide-react";
+import { Check, Film, SearchX, Trash2 } from "lucide-react";
+import { useMemo, useState } from "react";
+import AssetThumb from "@/components/AssetThumb";
 import type { CatalogEntry } from "@/lib/catalog";
 import { deleteAsset } from "@/lib/solid/asset-store";
-import AssetThumb from "@/components/AssetThumb";
 
 type DateFilter = "all" | "today" | "week";
 
@@ -34,14 +34,18 @@ export default function LibraryGrid({
   const allTags = useMemo(() => {
     const counts = new Map<string, number>();
     for (const e of catalog) for (const t of e.tags) counts.set(t, (counts.get(t) ?? 0) + 1);
-    return [...counts.entries()].sort((a, b) => b[1] - a[1]).slice(0, 24).map(([t]) => t);
+    return [...counts.entries()]
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 24)
+      .map(([t]) => t);
   }, [catalog]);
 
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase();
     const now = Date.now();
     return catalog.filter((e) => {
-      if (q && !(e.caption.toLowerCase().includes(q) || e.tags.some((t) => t.includes(q)))) return false;
+      if (q && !(e.caption.toLowerCase().includes(q) || e.tags.some((t) => t.includes(q))))
+        return false;
       if (activeTags.size > 0 && ![...activeTags].every((t) => e.tags.includes(t))) return false;
       if (dateFilter !== "all") {
         const ms = Date.parse(e.captureDate);
@@ -135,7 +139,9 @@ export default function LibraryGrid({
               key={t}
               onClick={() => toggleTag(t)}
               className={`rounded-full border px-2.5 py-0.5 font-mono text-[11px] ${
-                activeTags.has(t) ? "border-primary bg-primary/10 text-primary" : "text-muted-foreground"
+                activeTags.has(t)
+                  ? "border-primary bg-primary/10 text-primary"
+                  : "text-muted-foreground"
               }`}
             >
               {t}
@@ -156,56 +162,67 @@ export default function LibraryGrid({
           )}
         </div>
       ) : (
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
-        {filtered.map((e) => {
-          const selected = selectedIds.has(e.id);
-          return (
-            <div key={e.id} className="group flex flex-col gap-1.5">
-              {/* The tile is a single select button; the badge/checkmark are
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+          {filtered.map((e) => {
+            const selected = selectedIds.has(e.id);
+            return (
+              <div key={e.id} className="group flex flex-col gap-1.5">
+                {/* The tile is a single select button; the badge/checkmark are
                   pointer-events-none overlays and the delete control is a
                   SIBLING button (never nested — nested buttons are invalid HTML). */}
-              <div className="relative">
-                <button
-                  onClick={() => toggleSelect(e.id)}
-                  aria-pressed={selected}
-                  aria-label={`${selected ? "Deselect" : "Select"} ${e.caption || "asset"}`}
-                  className={`block w-full overflow-hidden rounded-lg border ${
-                    selected ? "border-primary ring-2 ring-primary" : "border-border"
-                  }`}
-                >
-                  <AssetThumb podRoot={podRoot} id={e.id} alt={e.caption} className="aspect-square w-full object-cover" />
-                </button>
-                {e.kind === "video" && (
-                  <span className="pointer-events-none absolute left-2 top-2 rounded bg-black/70 px-1.5 py-0.5 font-mono text-[10px] text-white">
-                    {e.duration ? `${Math.round(e.duration)}s` : "video"}
+                <div className="relative">
+                  <button
+                    onClick={() => toggleSelect(e.id)}
+                    aria-pressed={selected}
+                    aria-label={`${selected ? "Deselect" : "Select"} ${e.caption || "asset"}`}
+                    className={`block w-full overflow-hidden rounded-lg border ${
+                      selected ? "border-primary ring-2 ring-primary" : "border-border"
+                    }`}
+                  >
+                    <AssetThumb
+                      podRoot={podRoot}
+                      id={e.id}
+                      alt={e.caption}
+                      className="aspect-square w-full object-cover"
+                    />
+                  </button>
+                  {e.kind === "video" && (
+                    <span className="pointer-events-none absolute left-2 top-2 rounded bg-black/70 px-1.5 py-0.5 font-mono text-[10px] text-white">
+                      {e.duration ? `${Math.round(e.duration)}s` : "video"}
+                    </span>
+                  )}
+                  <span
+                    className={`pointer-events-none absolute right-2 top-2 flex size-5 items-center justify-center rounded-full border ${
+                      selected
+                        ? "border-primary bg-primary text-primary-foreground"
+                        : "border-white/70 bg-black/40"
+                    }`}
+                  >
+                    {selected && <Check className="size-3" />}
                   </span>
-                )}
-                <span
-                  className={`pointer-events-none absolute right-2 top-2 flex size-5 items-center justify-center rounded-full border ${
-                    selected ? "border-primary bg-primary text-primary-foreground" : "border-white/70 bg-black/40"
-                  }`}
-                >
-                  {selected && <Check className="size-3" />}
-                </span>
-                <button
-                  onClick={() => onDelete(e.id)}
-                  onBlur={() => confirmingId === e.id && setConfirmingId(null)}
-                  className={`absolute bottom-2 right-2 flex items-center gap-1 rounded-md p-1.5 text-white transition-opacity ${
-                    confirmingId === e.id
-                      ? "bg-destructive opacity-100"
-                      : "bg-black/60 opacity-0 hover:bg-black/80 group-hover:opacity-100 focus-visible:opacity-100"
-                  }`}
-                  aria-label={confirmingId === e.id ? "Confirm delete" : "Delete asset"}
-                >
-                  <Trash2 className="size-3.5" />
-                  {confirmingId === e.id && <span className="font-mono text-[10px]">Delete?</span>}
-                </button>
+                  <button
+                    onClick={() => onDelete(e.id)}
+                    onBlur={() => confirmingId === e.id && setConfirmingId(null)}
+                    className={`absolute bottom-2 right-2 flex items-center gap-1 rounded-md p-1.5 text-white transition-opacity ${
+                      confirmingId === e.id
+                        ? "bg-destructive opacity-100"
+                        : "bg-black/60 opacity-0 hover:bg-black/80 group-hover:opacity-100 focus-visible:opacity-100"
+                    }`}
+                    aria-label={confirmingId === e.id ? "Confirm delete" : "Delete asset"}
+                  >
+                    <Trash2 className="size-3.5" />
+                    {confirmingId === e.id && (
+                      <span className="font-mono text-[10px]">Delete?</span>
+                    )}
+                  </button>
+                </div>
+                <p className="line-clamp-2 text-xs text-muted-foreground">
+                  {e.caption || "captioning…"}
+                </p>
               </div>
-              <p className="line-clamp-2 text-xs text-muted-foreground">{e.caption || "captioning…"}</p>
-            </div>
-          );
-        })}
-      </div>
+            );
+          })}
+        </div>
       )}
 
       {selectedIds.size > 0 && (

@@ -23,10 +23,9 @@ export default function ConnectPage() {
         Sign in to drop media and make reels.
       </h1>
       <p className="mt-4 text-muted-foreground">
-        Mind Video stores everything in your pod under{" "}
-        <code>your-pod/mind-video/</code> — your assets and rendered reels live
-        on your pod, never our servers. Pick the issuer that hosts your pod; we
-        redirect you there for the OIDC dance and come back once you&apos;re in.
+        Mind Video stores everything in your pod under <code>your-pod/mind-video/</code> — your
+        assets and rendered reels live on your pod, never our servers. Pick the issuer that hosts
+        your pod; we redirect you there for the OIDC dance and come back once you&apos;re in.
       </p>
       <div className="mt-8">
         <ConnectForm />
@@ -37,8 +36,7 @@ export default function ConnectPage() {
             Dev shortcut
           </p>
           <p className="mt-2">
-            The shared local pod server (on {ISSUER_HOST}) ships a pre-seeded
-            account:
+            The shared local pod server (on {ISSUER_HOST}) ships a pre-seeded account:
           </p>
           <ul className="mt-2 space-y-1 font-mono text-xs">
             <li>alice@mind-video.local · dev-only-do-not-use-in-prod</li>

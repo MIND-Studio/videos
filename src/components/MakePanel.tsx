@@ -1,15 +1,15 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
 import { Button } from "@mind-studio/ui";
-import { Loader2, Sparkles, Film, Download, X } from "lucide-react";
-import type { CatalogEntry } from "@/lib/catalog";
-import { toPlannerAsset } from "@/lib/catalog";
-import type { ReelSpec } from "@/lib/spec/schema";
-import { renderReel } from "@/lib/publish/render-client";
-import { saveReel, listReels, type ReelMeta } from "@/lib/solid/reel-store";
+import { Download, Film, Loader2, Sparkles, X } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
 import ReelCanvas from "@/components/ReelCanvas";
 import ReelVideo from "@/components/ReelVideo";
+import type { CatalogEntry } from "@/lib/catalog";
+import { toPlannerAsset } from "@/lib/catalog";
+import { renderReel } from "@/lib/publish/render-client";
+import { listReels, type ReelMeta, saveReel } from "@/lib/solid/reel-store";
+import type { ReelSpec } from "@/lib/spec/schema";
 
 /** Describe a reel → plan a ReelSpec → preview → export an MP4 to the pod. */
 export default function MakePanel({
@@ -38,7 +38,9 @@ export default function MakePanel({
   const catalogById = useMemo(() => new Map(catalog.map((e) => [e.id, e])), [catalog]);
 
   useEffect(() => {
-    listReels(podRoot).then(setRecent).catch(() => {});
+    listReels(podRoot)
+      .then(setRecent)
+      .catch(() => {});
   }, [podRoot]);
 
   async function onPlan() {
@@ -78,7 +80,9 @@ export default function MakePanel({
       const nowIso = new Date().toISOString();
       await saveReel(podRoot, reel, mp4, nowIso);
       setRenderedUrl(URL.createObjectURL(mp4));
-      listReels(podRoot).then(setRecent).catch(() => {});
+      listReels(podRoot)
+        .then(setRecent)
+        .catch(() => {});
     } catch (e) {
       setRenderError(e instanceof Error ? e.message : String(e));
     } finally {
@@ -95,7 +99,11 @@ export default function MakePanel({
         {selectedIds.size > 0 && (
           <div className="flex items-center gap-2 rounded-md border border-primary/40 bg-primary/5 px-3 py-2 text-sm">
             <span className="text-primary">◉ working from {selectedIds.size} selected</span>
-            <button onClick={clearSelection} className="ml-auto text-muted-foreground hover:text-foreground" aria-label="Clear selection">
+            <button
+              onClick={clearSelection}
+              className="ml-auto text-muted-foreground hover:text-foreground"
+              aria-label="Clear selection"
+            >
               <X className="size-4" />
             </button>
           </div>
@@ -113,7 +121,11 @@ export default function MakePanel({
         />
         <div className="flex items-center gap-3">
           <Button onClick={onPlan} disabled={planning || !query.trim()}>
-            {planning ? <Loader2 className="size-4 animate-spin" /> : <Sparkles className="size-4" />}
+            {planning ? (
+              <Loader2 className="size-4 animate-spin" />
+            ) : (
+              <Sparkles className="size-4" />
+            )}
             Plan the reel
           </Button>
           <span className="font-mono text-[11px] text-muted-foreground">⌘↵</span>
@@ -133,21 +145,30 @@ export default function MakePanel({
           <div className="mt-2 rounded-lg border bg-card p-4">
             <div className="flex items-center justify-between">
               <p className="font-medium">{reel.title}</p>
-              <span className="font-mono text-[11px] text-muted-foreground">{reel.scenes.length} scenes</span>
+              <span className="font-mono text-[11px] text-muted-foreground">
+                {reel.scenes.length} scenes
+              </span>
             </div>
             <div className="mt-3 flex flex-wrap items-center gap-3">
               <Button onClick={onExport} disabled={rendering} variant="secondary">
-                {rendering ? <Loader2 className="size-4 animate-spin" /> : <Download className="size-4" />}
+                {rendering ? (
+                  <Loader2 className="size-4 animate-spin" />
+                ) : (
+                  <Download className="size-4" />
+                )}
                 Export MP4 to pod
               </Button>
               {renderError && <span className="text-sm text-destructive">{renderError}</span>}
             </div>
             {renderedUrl && (
-              <video src={renderedUrl} controls className="mt-4 w-full max-w-[300px] rounded-lg border" />
+              <video
+                src={renderedUrl}
+                controls
+                className="mt-4 w-full max-w-[300px] rounded-lg border"
+              />
             )}
           </div>
         )}
-
       </div>
 
       {/* Preview is the second grid item so on mobile (single column) it stacks

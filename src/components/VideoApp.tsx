@@ -1,12 +1,12 @@
 "use client";
 
+import { Clapperboard, Library, Loader2, Upload } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Loader2, Upload, Clapperboard, Library } from "lucide-react";
-import { listCatalog } from "@/lib/solid/asset-store";
-import type { CatalogEntry } from "@/lib/catalog";
 import DropPanel from "@/components/DropPanel";
-import MakePanel from "@/components/MakePanel";
 import LibraryGrid from "@/components/LibraryGrid";
+import MakePanel from "@/components/MakePanel";
+import type { CatalogEntry } from "@/lib/catalog";
+import { listCatalog } from "@/lib/solid/asset-store";
 
 type Tab = "drop" | "make" | "library";
 
@@ -61,7 +61,9 @@ export default function VideoApp({ podRoot }: { podRoot: string }) {
       <div className="mb-5 flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
         <span>{catalog.length} assets</span>
         {pendingCaptions > 0 && <span>· {pendingCaptions} captioning</span>}
-        {selectedIds.size > 0 && <span className="text-primary">· {selectedIds.size} selected</span>}
+        {selectedIds.size > 0 && (
+          <span className="text-primary">· {selectedIds.size} selected</span>
+        )}
       </div>
 
       {/* tab bar */}
@@ -71,7 +73,9 @@ export default function VideoApp({ podRoot }: { podRoot: string }) {
             key={id}
             onClick={() => setTab(id)}
             className={`flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors ${
-              tab === id ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"
+              tab === id
+                ? "bg-primary text-primary-foreground"
+                : "text-muted-foreground hover:text-foreground"
             }`}
             data-testid={`tab-${id}`}
           >

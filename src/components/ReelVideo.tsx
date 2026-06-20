@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { Film } from "lucide-react";
+import { useEffect, useState } from "react";
 import { fetchReelVideoBlob } from "@/lib/solid/reel-store";
 
 /**
@@ -40,7 +40,9 @@ export default function ReelVideo({
 
   if (failed) {
     return (
-      <div className={`flex aspect-[9/16] items-center justify-center bg-muted text-muted-foreground ${className ?? ""}`}>
+      <div
+        className={`flex aspect-[9/16] items-center justify-center bg-muted text-muted-foreground ${className ?? ""}`}
+      >
         <Film className="size-6" />
       </div>
     );
@@ -51,5 +53,7 @@ export default function ReelVideo({
   // `#t=0.1` seeks to the first frame so the card shows the reel's title frame
   // as a poster instead of a blank black rectangle at rest. The blob is already
   // in memory, so the seek is instant.
-  return <video src={`${url}#t=0.1`} controls preload="metadata" playsInline className={className} />;
+  return (
+    <video src={`${url}#t=0.1`} controls preload="metadata" playsInline className={className} />
+  );
 }

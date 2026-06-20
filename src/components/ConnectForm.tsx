@@ -1,19 +1,18 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { login } from "@inrupt/solid-client-authn-browser";
 import {
-  MindLoginCard,
   browserOidcLogin,
-  writeLastIdentity,
   clearLastIdentity,
+  MindLoginCard,
+  writeLastIdentity,
 } from "@mind-studio/core";
 import { Button } from "@mind-studio/ui";
-import { DEFAULT_ISSUER, session, rememberIssuer } from "@/lib/solid/session";
+import { useEffect, useState } from "react";
 import { ensureSession, rememberReturnToDefault } from "@/lib/solid/auth";
+import { DEFAULT_ISSUER, rememberIssuer, session } from "@/lib/solid/session";
 
 const APP_NAME = "Video";
-const MIND_ACCENT = "#14b8a6";
 
 /**
  * Normalize a user-typed issuer into a valid URL. Tolerates a missing scheme
@@ -59,9 +58,7 @@ export default function ConnectForm() {
   if (webId) {
     return (
       <div className="rounded-lg border border-primary/40 bg-primary/5 p-5">
-        <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-primary">
-          Connected
-        </p>
+        <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-primary">Connected</p>
         <p className="mt-2 break-all font-mono text-sm" data-testid="webid">
           {webId}
         </p>
@@ -87,7 +84,6 @@ export default function ConnectForm() {
       <MindLoginCard
         appName={APP_NAME}
         defaultIssuer={DEFAULT_ISSUER}
-        accent={MIND_ACCENT}
         onLogin={async ({ issuer }) => {
           const normalized = normalizeIssuer(issuer);
           rememberIssuer(normalized);

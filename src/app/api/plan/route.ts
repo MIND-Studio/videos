@@ -1,11 +1,11 @@
-import { NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
+import { MISTRAL_PLAN_MODEL, planWithMistral } from "@/lib/ai/mistral";
+import { activeProvider } from "@/lib/ai/provider";
+import type { PlannerAsset } from "@/lib/catalog";
+import { composeReel } from "@/lib/spec/compose";
+import { planContent, SYSTEM_PROMPT } from "@/lib/spec/prompt";
 import { reelSchema } from "@/lib/spec/schema";
 import { validateReel } from "@/lib/spec/validate";
-import { composeReel } from "@/lib/spec/compose";
-import { SYSTEM_PROMPT, planContent } from "@/lib/spec/prompt";
-import type { PlannerAsset } from "@/lib/catalog";
-import { activeProvider } from "@/lib/ai/provider";
-import { planWithMistral, MISTRAL_PLAN_MODEL } from "@/lib/ai/mistral";
 
 // The Anthropic SDK needs the Node runtime, not Edge.
 export const runtime = "nodejs";
@@ -39,7 +39,7 @@ export async function POST(req: NextRequest) {
   if (query.length > MAX_QUERY_CHARS) {
     return NextResponse.json(
       { error: `Query too long (max ${MAX_QUERY_CHARS} characters)` },
-      { status: 413 }
+      { status: 413 },
     );
   }
 
@@ -47,7 +47,7 @@ export async function POST(req: NextRequest) {
   if (catalog.length === 0) {
     return NextResponse.json(
       { error: "Your library is empty — drop some photos or videos first." },
-      { status: 422 }
+      { status: 422 },
     );
   }
   const selectedAssetIds = sanitizeIds(body.selectedAssetIds);
@@ -65,7 +65,7 @@ export async function POST(req: NextRequest) {
     } catch (e) {
       return NextResponse.json(
         { error: `Planning failed: ${e instanceof Error ? e.message : String(e)}` },
-        { status: 502 }
+        { status: 502 },
       );
     }
   } else if (provider === "anthropic") {
@@ -91,7 +91,7 @@ export async function POST(req: NextRequest) {
   // that reference unknown assets so the renderer never 404s.
   const known = new Set(catalog.map((a) => a.id));
   const scenes = result.reel.scenes.filter(
-    (s) => !(s.kind === "photo" || s.kind === "video") || known.has(s.assetId)
+    (s) => !(s.kind === "photo" || s.kind === "video") || known.has(s.assetId),
   );
   const reel = { ...result.reel, scenes };
 
@@ -125,7 +125,7 @@ function sanitizeIds(input: unknown): string[] | null {
 async function planWithClaude(
   query: string,
   catalog: PlannerAsset[],
-  selectedAssetIds: string[] | null
+  selectedAssetIds: string[] | null,
 ): Promise<unknown> {
   const { default: Anthropic } = await import("@anthropic-ai/sdk");
   const { zodOutputFormat } = await import("@anthropic-ai/sdk/helpers/zod");

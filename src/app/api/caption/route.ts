@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { activeProvider } from "@/lib/ai/provider";
 import { captionWithMistral, MISTRAL_VISION_MODEL } from "@/lib/ai/mistral";
+import { activeProvider } from "@/lib/ai/provider";
 
 // The Anthropic SDK needs the Node runtime, not Edge.
 export const runtime = "nodejs";
@@ -78,7 +78,7 @@ function normalizeMime(m: unknown): "image/jpeg" | "image/png" | "image/webp" | 
 async function captionWithClaude(
   base64: string,
   mimeType: "image/jpeg" | "image/png" | "image/webp" | "image/gif",
-  kind: "photo" | "video"
+  kind: "photo" | "video",
 ): Promise<{ caption: string; tags: string[] }> {
   const { default: Anthropic } = await import("@anthropic-ai/sdk");
   const { zodOutputFormat } = await import("@anthropic-ai/sdk/helpers/zod");
@@ -110,8 +110,14 @@ async function captionWithClaude(
 }
 
 /** Derive a passable caption + tags from the filename when there's no key. */
-function fallbackCaption(name: string, kind: "photo" | "video"): { caption: string; tags: string[] } {
-  const stem = name.replace(/\.[a-z0-9]+$/i, "").replace(/[_-]+/g, " ").trim();
+function fallbackCaption(
+  name: string,
+  kind: "photo" | "video",
+): { caption: string; tags: string[] } {
+  const stem = name
+    .replace(/\.[a-z0-9]+$/i, "")
+    .replace(/[_-]+/g, " ")
+    .trim();
   const words = stem
     .toLowerCase()
     .split(/\s+/)

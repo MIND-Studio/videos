@@ -34,7 +34,7 @@ Rules:
 export function planContent(
   query: string,
   catalog: PlannerAsset[],
-  selectedAssetIds: string[] | null
+  selectedAssetIds: string[] | null,
 ): string {
   const catalogJson = JSON.stringify(catalog, null, 2);
   if (selectedAssetIds && selectedAssetIds.length > 0) {

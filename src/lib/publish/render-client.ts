@@ -1,9 +1,9 @@
 "use client";
 
-import type { ReelSpec } from "@/lib/spec/schema";
 import type { CatalogEntry } from "@/lib/catalog";
 import { serializeReel } from "@/lib/reel/serialize";
 import { fetchAssetBlob } from "@/lib/solid/asset-store";
+import type { ReelSpec } from "@/lib/spec/schema";
 
 /**
  * Browser-side reel rendering, via the same-origin `/api/render` proxy → the
@@ -59,7 +59,7 @@ function referencedIds(reel: ReelSpec): string[] {
 export async function renderReel(
   podRoot: string,
   reel: ReelSpec,
-  catalogById: Map<string, CatalogEntry>
+  catalogById: Map<string, CatalogEntry>,
 ): Promise<Blob> {
   const ids = referencedIds(reel);
   const filenameById = new Map<string, string>();
@@ -73,7 +73,7 @@ export async function renderReel(
       filenameById.set(id, filename);
       const blob = await fetchAssetBlob(podRoot, id);
       assets.push({ filename, base64: await blobToBase64(blob) });
-    })
+    }),
   );
 
   const html = serializeReel(reel, (id) => filenameById.get(id) ?? id);
