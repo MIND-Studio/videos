@@ -8,6 +8,7 @@
     "start": "next start -p 3170",
     "worker": "node worker/server.mjs",
     "seed:demo": "tsx scripts/seed-demo.ts",
+    "gen:icons": "node scripts/gen-icons.mjs",
     "typecheck": "tsc --noEmit",
     "lint": "biome check .",
     "lint:fix": "biome check --write .",
@@ -38,6 +39,7 @@
     "husky": "^9.1.7",
     "hyperframes": "^0.5.0",
     "lint-staged": "^17.0.7",
+    "sharp": "^0.34.5",
     "tailwindcss": "^4",
     "tsx": "^4.22.3",
     "typescript": "^5"
